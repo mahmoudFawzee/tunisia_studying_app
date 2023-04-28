@@ -4,7 +4,6 @@ import 'package:studying_app/data/models/exam.dart';
 import 'package:studying_app/logic/blocs/firebase_exam_bloc/firebase_exam_bloc.dart';
 import 'package:studying_app/logic/cubits/firebase_exam_cubit/firebase_exam_cubit.dart';
 import 'package:studying_app/view/screens/exam_revision_screen/exam_revision_screen.dart';
-import 'package:studying_app/view/screens/material_screens/material_all_lessons.dart';
 import 'package:studying_app/view/theme/app_colors.dart';
 import 'package:studying_app/view/widgets/app_background_container.dart';
 
@@ -70,9 +69,6 @@ class ExamsPage extends StatelessWidget {
                                               exams[index].materialName,
                                         ),
                                       );
-                                  print('start');
-                                  //TODO here we will move to the exam content like lessons and
-                                  //homework and revision advices.
                                   Navigator.of(context).pushNamed(
                                     ExamRevisionScreen.pageRoute,
                                     arguments: {

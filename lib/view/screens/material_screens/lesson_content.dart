@@ -51,7 +51,7 @@ class LessonContent extends StatelessWidget {
             },
           ),
           title: Text(
-            routArgus['name']!,
+            lessonName,
             style: Theme.of(context).textTheme.headline5,
           ),
         ),
@@ -83,6 +83,8 @@ class LessonContent extends StatelessWidget {
                           'lessonName': lessonName,
                         },
                       );
+                      print(materialName);
+                      print(lessonName);
                     },
                   ),
                   customItem(
@@ -105,7 +107,6 @@ class LessonContent extends StatelessWidget {
                   ),
                 ],
               ),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

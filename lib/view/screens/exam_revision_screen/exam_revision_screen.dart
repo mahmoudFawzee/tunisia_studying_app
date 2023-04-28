@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studying_app/data/models/lesson.dart';
 import 'package:studying_app/logic/blocs/firebase_exam_bloc/firebase_exam_bloc.dart';
 import 'package:studying_app/logic/blocs/materials_bloc/materials_bloc.dart';
-import 'package:studying_app/logic/cubits/pdf_cubit/pdf_cubit.dart';
 import 'package:studying_app/view/resources/strings/strings_manger.dart';
 import 'package:studying_app/view/screens/material_screens/lesson_content.dart';
 import 'package:studying_app/view/screens/pdf/homework_section_pdfs.dart';
@@ -66,8 +65,6 @@ class ExamRevisionScreen extends StatelessWidget {
                             .toList(),
                         value: state.section,
                         onChanged: (value) {
-                          //TODO based on the value we will call a specific event.
-                          print(value);
                           context.read<FirebaseExamContentBloc>().add(
                                 ChooseSpecificExamSectionEvent(
                                   section: value!,
@@ -89,7 +86,6 @@ class ExamRevisionScreen extends StatelessWidget {
                                   ),
                                 );
                           }
-                          print(value);
                         },
                       ),
                     );

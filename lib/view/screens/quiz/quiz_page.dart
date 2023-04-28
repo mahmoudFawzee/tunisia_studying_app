@@ -14,7 +14,7 @@ class QuizPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routeArgus =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String?>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final String materialName = routeArgus['materialName']!;
     final String lessonName = routeArgus['lessonName']!;
     return WillPopScope(
