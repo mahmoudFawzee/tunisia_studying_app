@@ -4,11 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studying_app/data/models/user.dart';
 
 class FirebaseAuthApi {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  static final   FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   bool get isUser {
-    User? user = auth.currentUser;
+    User? user = _auth.currentUser;
     if (user != null) {
       return true;
     }
@@ -16,16 +16,18 @@ class FirebaseAuthApi {
   }
 
   User? get currentUser {
-    User? user = auth.currentUser;
+    User? user = _auth.currentUser;
     if (user != null) {
       return user;
     }
     return null;
   }
 
+ static String get  getCurrentUserEmail =>_auth.currentUser!.email!;
+
   Future<String> addNewUser(MyUser user) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: user.email,
         password: user.password,
       );
@@ -48,7 +50,7 @@ class FirebaseAuthApi {
     required String password,
   }) async {
     try {
-      UserCredential signInUser = await auth.signInWithEmailAndPassword(
+      UserCredential signInUser = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -79,7 +81,7 @@ class FirebaseAuthApi {
 
   Future<String?> signOut() async {
     try {
-      await auth.signOut();
+      await _auth.signOut();
       return 'You Sign Out';
     } on FirebaseException catch (e) {
       print(e.code);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studying_app/view/screens/home/chat_screen.dart';
 import 'package:studying_app/view/screens/home/home.dart';
 import 'package:studying_app/view/screens/home/notification_page.dart';
 import 'package:studying_app/view/screens/home/user_profile.dart';
@@ -16,13 +17,11 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  List<Widget> bottomNavigationBarWidgets = const [
-    UserProfile(),
-    HomePage(),
-    AppNotification(),
-    Center(
-      child: Text('4 page'),
-    ),
+  List<Widget> bottomNavigationBarWidgets =  [
+   const UserProfile(),
+   const HomePage(),
+    const AppNotification(),
+    ChatScreen(),
   ];
   int _currentIndex = 1;
   @override
@@ -54,8 +53,8 @@ class _NavigationState extends State<Navigation> {
                   index: 2,
                 ),
                 bottomNavigationBarItem(
-                  selectedIcon: Icons.flag,
-                  icon: Icons.outlined_flag,
+                  selectedIcon: Icons.chat,
+                  icon: Icons.chat_outlined,
                   index: 3,
                 ),
               ],
@@ -67,7 +66,7 @@ class _NavigationState extends State<Navigation> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         //extendBody: true,
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: _currentIndex!=1?null:FloatingActionButton(
           elevation: 0,
           backgroundColor: AppColors.buttonsLightColor,
           onPressed: () {

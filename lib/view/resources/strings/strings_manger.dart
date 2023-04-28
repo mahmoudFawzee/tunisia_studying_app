@@ -30,6 +30,7 @@ class StringsManger {
   static const someErrorOcurred = 'حدث خطأ ما';
   static const advices = 'نصائح المراجعة';
   static const revision = 'المراجعة';
+  static const noMessages = 'لا يوجد رسائل هنا';
 }
 
 class FirebaseCollectionsStrings {
@@ -38,4 +39,6 @@ class FirebaseCollectionsStrings {
   static const studyingYear = 'studying year';
   static const materials = 'common material';
   static const lessons = 'lessons';
+  static const chats = 'chats';
+  static const chat = 'chat';
 }

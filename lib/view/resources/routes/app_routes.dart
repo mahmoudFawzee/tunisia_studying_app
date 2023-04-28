@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studying_app/logic/blocs/auth_bloc/auth_bloc.dart';
+import 'package:studying_app/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:studying_app/logic/blocs/firebase_exam_bloc/firebase_exam_bloc.dart';
 import 'package:studying_app/logic/blocs/lessons_bloc/lessons_bloc.dart';
 import 'package:studying_app/logic/blocs/materials_bloc/materials_bloc.dart';
@@ -40,185 +43,204 @@ import 'package:studying_app/view/screens/video/lesson_video.dart';
 
 import '../../../logic/cubits/advices_notes_cubit/advices_notes_cubit.dart';
 
-Map<String, Widget Function(BuildContext)> appRoutes({
-  required PdfCubit pdfCubit,
-  required LessonsBloc lessonsBloc,
-  required MaterialsBloc materialsBloc,
-  required AuthBloc authBloc,
-  required LocalHomeworkCubit localHomeworkCubit,
-  required QuizCubit quizCubit,
-  required FirebaseExamCubit firebaseExamCubit,
-  required NotificationsCubit notificationsCubit,
-  required AdvicesNotesCubit advicesNotesCubit,
-  required FirebaseExamContentBloc firebaseExamContentBloc,
-}) {
-  return {
-    SplashScreen.pageRoute: (context) => const SplashScreen(),
-    OnBoardingScreen.pageRoute: (context) => const OnBoardingScreen(),
-    Registration.pageRoute: (context) => BlocProvider.value(
-          value: authBloc,
-          child: const Registration(),
-        ),
-    SubscriptionCompleted.pageRoute: (context) => const SubscriptionCompleted(),
-    LogIn.pageRoute: (context) => BlocProvider.value(
-          value: authBloc,
-          child: const LogIn(),
-        ),
-    Navigation.pageRoute: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: materialsBloc,
-            ),
-            BlocProvider.value(
-              value: localHomeworkCubit,
-            ),
-            BlocProvider.value(
-              value: authBloc,
-            ),
-            BlocProvider.value(
-              value: firebaseExamCubit,
-            ),
-            BlocProvider.value(
-              value: notificationsCubit,
-            ),
-          ],
-          child: const Navigation(),
-        ),
-    EducationalMaterialsScreen.pageRoute: (context) => BlocProvider.value(
-          value: materialsBloc,
-          child: const EducationalMaterialsScreen(),
-        ),
-    AboutApp.pageRoute: (context) => const AboutApp(),
-    NewsScreen.pageRoute: (context) => const NewsScreen(),
-    //TODO add all this routes...
-    ContactUs.pageRoute: (context) => const ContactUs(),
-    OurGoals.pageRoute: (context) => const OurGoals(),
-    NewDetails.pageRoute: (context) => const NewDetails(),
-    AppPros.pageRoute: (context) => AppPros(),
-    MaterialContent.pageRoute: (context) => MultiBlocProvider(providers: [
-          BlocProvider.value(
-            value: materialsBloc,
+class RoutesManger {
+  final _pdfCubit = PdfCubit();
+  final _lessonsBloc = LessonsBloc();
+  final _materialsBloc = MaterialsBloc();
+  final _authBloc = AuthBloc();
+  final _localHomeworkCubit = LocalHomeworkCubit();
+  final _quizCubit = QuizCubit();
+  final _firebaseExamCubit = FirebaseExamCubit();
+  final _notificationsCubit = NotificationsCubit();
+  final _advicesNotesCubit = AdvicesNotesCubit();
+  final _firebaseExamContentBloc = FirebaseExamContentBloc();
+  final _chatBloc = ChatBloc();
+  dispose() {
+    _authBloc.close();
+    _materialsBloc.close();
+    _pdfCubit.close();
+    _lessonsBloc.close();
+    _localHomeworkCubit.close();
+    _firebaseExamCubit.close();
+    _quizCubit.close();
+    _notificationsCubit.close();
+    _advicesNotesCubit.close();
+    _firebaseExamContentBloc.close();
+    _chatBloc.close();
+  }
+
+  Map<String, Widget Function(BuildContext)> appRoutes() {
+    return {
+      SplashScreen.pageRoute: (context) => const SplashScreen(),
+      OnBoardingScreen.pageRoute: (context) => const OnBoardingScreen(),
+      Registration.pageRoute: (context) => BlocProvider.value(
+            value: _authBloc,
+            child: const Registration(),
           ),
-          BlocProvider.value(
-            value: pdfCubit,
+      SubscriptionCompleted.pageRoute: (context) =>
+          const SubscriptionCompleted(),
+      LogIn.pageRoute: (context) => BlocProvider.value(
+            value: _authBloc,
+            child: const LogIn(),
           ),
-          BlocProvider.value(
-            value: lessonsBloc,
+      Navigation.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _materialsBloc,
+              ),
+              BlocProvider.value(
+                value: _localHomeworkCubit,
+              ),
+              BlocProvider.value(
+                value: _authBloc,
+              ),
+              BlocProvider.value(
+                value: _firebaseExamCubit,
+              ),
+              BlocProvider.value(
+                value: _notificationsCubit,
+              ),
+              BlocProvider.value(
+                value: _chatBloc,
+              ),
+            ],
+            child: const Navigation(),
           ),
-          BlocProvider.value(
-            value: advicesNotesCubit,
+      EducationalMaterialsScreen.pageRoute: (context) => BlocProvider.value(
+            value: _materialsBloc,
+            child: const EducationalMaterialsScreen(),
           ),
-        ], child: const MaterialContent()),
-    MaterialAllLessons.pageRoute: (context) => BlocProvider.value(
-          value: lessonsBloc,
-          child: const MaterialAllLessons(),
-        ),
-    PdfViewerPage.pageRoute: (context) => MultiBlocProvider(
-          providers: [
+      AboutApp.pageRoute: (context) => const AboutApp(),
+      NewsScreen.pageRoute: (context) => const NewsScreen(),      
+      ContactUs.pageRoute: (context) => const ContactUs(),
+      OurGoals.pageRoute: (context) => const OurGoals(),
+      NewDetails.pageRoute: (context) => const NewDetails(),
+      AppPros.pageRoute: (context) => AppPros(),
+      MaterialContent.pageRoute: (context) => MultiBlocProvider(providers: [
             BlocProvider.value(
-              value: pdfCubit,
+              value: _materialsBloc,
             ),
             BlocProvider.value(
-              value: lessonsBloc,
+              value: _pdfCubit,
             ),
             BlocProvider.value(
-              value: materialsBloc,
-            ),
-          ],
-          child: const PdfViewerPage(),
-        ),
-    MaterialPdfsScreen.pageRoute: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: materialsBloc,
+              value: _lessonsBloc,
             ),
             BlocProvider.value(
-              value: pdfCubit,
+              value: _advicesNotesCubit,
             ),
-          ],
-          child: const MaterialPdfsScreen(),
-        ),
-    QuizPage.pageRoute: (context) => BlocProvider.value(
-          value: quizCubit,
-          child: const QuizPage(),
-        ),
-    LessonContent.pageRoute: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: lessonsBloc,
-            ),
-            BlocProvider.value(
-              value: quizCubit,
-            ),
-          ],
-          child: const LessonContent(),
-        ),
-    LessonVideoScreen.pageRoute: (context) => BlocProvider.value(
-          value: lessonsBloc,
-          child: const LessonVideoScreen(),
-        ),
-    LessonMaterialPdfsPage.pageRoute: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: lessonsBloc,
-            ),
-            BlocProvider.value(
-              value: pdfCubit,
-            ),
-          ],
-          child: const LessonMaterialPdfsPage(),
-        ),
-    HomeworkSections.pageRoute: (context) => const HomeworkSections(),
-    OneSectionContent.pageRoute: (context) => const OneSectionContent(),
-    HomeworkSectionPdfs.pageRoute: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: pdfCubit,
-            ),
-            BlocProvider.value(
-              value: materialsBloc,
-            ),
-          ],
-          child: const HomeworkSectionPdfs(),
-        ),
-    HomeworkOrExamsPage.pageRoute: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: localHomeworkCubit..getMyHomework()),
-            BlocProvider.value(
-              value: firebaseExamCubit,
-            ),
-            BlocProvider.value(
-              value: lessonsBloc,
-            ),
-            BlocProvider.value(
-              value: notificationsCubit,
-            ),
-            BlocProvider.value(
-              value: firebaseExamContentBloc,
-            ),
-          ],
-          child: const HomeworkOrExamsPage(),
-        ),
-    Routes.addExamRoute: (context) => BlocProvider.value(
-          value: firebaseExamCubit,
-          child: const AddExamPage(),
-        ),
-    Routes.notesAdvicesRoute: (context) => BlocProvider.value(
-          value: advicesNotesCubit,
-          child: const AdvicesNotesPage(),
-        ),
-    ExamRevisionScreen.pageRoute: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: firebaseExamContentBloc,
-            ),
-            BlocProvider.value(
-              value: materialsBloc,
-            )
-          ],
-          child: const ExamRevisionScreen(),
-        )
-  };
+          ], child: const MaterialContent()),
+      MaterialAllLessons.pageRoute: (context) => BlocProvider.value(
+            value: _lessonsBloc,
+            child: const MaterialAllLessons(),
+          ),
+      PdfViewerPage.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _pdfCubit,
+              ),
+              BlocProvider.value(
+                value: _lessonsBloc,
+              ),
+              BlocProvider.value(
+                value: _materialsBloc,
+              ),
+            ],
+            child: const PdfViewerPage(),
+          ),
+      MaterialPdfsScreen.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _materialsBloc,
+              ),
+              BlocProvider.value(
+                value: _pdfCubit,
+              ),
+            ],
+            child: const MaterialPdfsScreen(),
+          ),
+      QuizPage.pageRoute: (context) => BlocProvider.value(
+            value: _quizCubit,
+            child: const QuizPage(),
+          ),
+      LessonContent.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _lessonsBloc,
+              ),
+              BlocProvider.value(
+                value: _quizCubit,
+              ),
+            ],
+            child: const LessonContent(),
+          ),
+      LessonVideoScreen.pageRoute: (context) => BlocProvider.value(
+            value: _lessonsBloc,
+            child: const LessonVideoScreen(),
+          ),
+      LessonMaterialPdfsPage.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _lessonsBloc,
+              ),
+              BlocProvider.value(
+                value: _pdfCubit,
+              ),
+            ],
+            child: const LessonMaterialPdfsPage(),
+          ),
+      HomeworkSections.pageRoute: (context) => const HomeworkSections(),
+      OneSectionContent.pageRoute: (context) => const OneSectionContent(),
+      HomeworkSectionPdfs.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _pdfCubit,
+              ),
+              BlocProvider.value(
+                value: _materialsBloc,
+              ),
+            ],
+            child: const HomeworkSectionPdfs(),
+          ),
+      HomeworkOrExamsPage.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: _localHomeworkCubit..getMyHomework()),
+              BlocProvider.value(
+                value: _firebaseExamCubit,
+              ),
+              BlocProvider.value(
+                value: _lessonsBloc,
+              ),
+              BlocProvider.value(
+                value: _notificationsCubit,
+              ),
+              BlocProvider.value(
+                value: _firebaseExamContentBloc,
+              ),
+            ],
+            child: const HomeworkOrExamsPage(),
+          ),
+      Routes.addExamRoute: (context) => BlocProvider.value(
+            value: _firebaseExamCubit,
+            child: const AddExamPage(),
+          ),
+      Routes.notesAdvicesRoute: (context) => BlocProvider.value(
+            value: _advicesNotesCubit,
+            child: const AdvicesNotesPage(),
+          ),
+      ExamRevisionScreen.pageRoute: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: _firebaseExamContentBloc,
+              ),
+              BlocProvider.value(
+                value: _materialsBloc,
+              )
+            ],
+            child: const ExamRevisionScreen(),
+          )
+    };
+  }
 }
 
 //TODO :move all routes here..
