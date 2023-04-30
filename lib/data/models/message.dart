@@ -21,8 +21,8 @@ class Message {
 
   Map<String, String> toFirebase({required Message message}) {
     return {
-      FirebaseKeys.messageText:message.messageText,
-      FirebaseKeys.senderEmail : message.senderEmail,
+      FirebaseKeys.messageText: message.messageText,
+      FirebaseKeys.senderEmail: message.senderEmail,
     };
   }
 }

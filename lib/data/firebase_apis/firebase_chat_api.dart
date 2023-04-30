@@ -12,7 +12,8 @@ class FirebaseChatApi {
     QuerySnapshot<Map<String, dynamic>> firebaseMessages = await _firestore
         .collection(FirebaseCollectionsStrings.chats)
         .doc(studyingYear)
-        .collection(FirebaseCollectionsStrings.chat).orderBy(FirebaseKeys.time)
+        .collection(FirebaseCollectionsStrings.chat)
+        .orderBy(FirebaseKeys.time)
         //todo : here we need to sort the messages based on the time of sending.
         .get();
     Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> messagesList =
@@ -43,21 +44,14 @@ class FirebaseChatApi {
   }
 
 //?stream of messages we will listen to.
-  Future<Stream<Message>> getNewMessagesStream({
+  Stream<QuerySnapshot<Map<String, dynamic>>> getNewMessagesStream({
     required String studyingYear,
-  }) async {
-    StreamController<Message> messagesStream = StreamController<Message>();
-    var firebaseMessagesStream = _firestore
+  }) {
+    return _firestore
         .collection(FirebaseCollectionsStrings.chats)
         .doc(studyingYear)
         .collection(FirebaseCollectionsStrings.chat)
-        .orderBy('time',descending: true)
+        .orderBy(FirebaseKeys.time,)
         .snapshots();
-    await for (var snapshot in firebaseMessagesStream) {
-      for (var message in snapshot.docs) {
-        messagesStream.add(Message.fromFirebase(firebaseObj: message.data()));
-      }
-    }
-    return messagesStream.stream;
   }
 }

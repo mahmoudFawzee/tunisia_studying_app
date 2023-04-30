@@ -11,11 +11,6 @@ class FirebaseUserDataApi {
   final FirebaseAuthApi _firebaseAuthApi = FirebaseAuthApi();
 
   Future<MyUser> getData() async {
-    //!another way to get the user data
-    //here we get the user data directly with the user document to save time
-    //we get the user document from the shared prefs field userID which
-    //its value saved in the log in phase once user log in the id will saved
-    //also and we will get it again and again.
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userID')!;
     DocumentSnapshot<Map<String, dynamic>> idData =

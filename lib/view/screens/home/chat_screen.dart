@@ -12,7 +12,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return BlocProvider.value(
-      value: BlocProvider.of<ChatBloc>(context)..add(const LoadChatMessages()),
+      value: BlocProvider.of<ChatBloc>(context),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -32,7 +32,7 @@ class ChatScreen extends StatelessWidget {
                       messages: state.messages,
                       currentUser: state.currentUser,
                     );
-                  }else if (state is GotNoMessagesState) {
+                  } else if (state is GotNoMessagesState) {
                     return Center(
                       child: Text(state.noMessages),
                     );
@@ -51,48 +51,48 @@ class ChatScreen extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(
-              height: height * .06,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: TextField(
-                      controller: textFieldController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: TextField(
+                    controller: textFieldController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: IconButton(
-                        onPressed: () {
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: IconButton(
+                      onPressed: () {
+                        if (textFieldController.value.text.isNotEmpty) {
                           context.read<ChatBloc>().add(
                                 SendMessageEvent(
                                   messageText: textFieldController.value.text,
                                 ),
                               );
                           textFieldController.clear();
-                        },
-                        icon: const Icon(
-                          Icons.send,
-                          color: AppColors.buttonsLightColor,
-                        ),
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.send,
+                        color: AppColors.buttonsLightColor,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -114,22 +114,24 @@ class ChatScreen extends StatelessWidget {
           child: Card(
             elevation: 0,
             color: Colors.white.withOpacity(0),
-            margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: Column(
+              crossAxisAlignment:
+                  isAppUser ? CrossAxisAlignment.start : CrossAxisAlignment.end,
               children: [
                 Text(messages[index].senderEmail),
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(10),
-                      topRight: const Radius.circular(10),
+                      topLeft: const Radius.circular(20),
+                      topRight: const Radius.circular(20),
                       bottomLeft: isAppUser
-                          ? const Radius.circular(10)
+                          ? const Radius.circular(20)
                           : const Radius.circular(0),
                       bottomRight: isAppUser
                           ? const Radius.circular(0)
-                          : const Radius.circular(10),
+                          : const Radius.circular(20),
                     ),
                     color: AppColors.buttonsLightColor,
                   ),

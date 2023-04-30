@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:studying_app/data/firebase_apis/fire_base_auth_api.dart';
 import 'package:studying_app/data/firebase_apis/firebase_user_data_api.dart';
 import 'package:studying_app/view/resources/assets/assets_manger.dart';
-import 'package:studying_app/view/screens/auth/log_in.dart';
 import 'package:studying_app/view/screens/auth/subscribtion_complete.dart';
 
 import 'package:studying_app/view/screens/home/navigation.dart';
@@ -20,22 +21,22 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final FirebaseAuthApi _firebaseApi = FirebaseAuthApi();
   final FirebaseUserDataApi _firebaseUserDataApi = FirebaseUserDataApi();
-  bool access = false;
-  canAccess() async {
+  
+  Future <bool>canAccess() async {
     try {
-      access = await _firebaseUserDataApi.getAllowAccess();
+      return await _firebaseUserDataApi.getAllowAccess();
     } catch (e) {
-      access = false;
+      return false;
     }
-    print(access);
+    
   }
 
-  nextPage() async {
-    await canAccess();
-    print(access);
+  nextPage() async{
     //todo: handle the state of no network to get the home page
     //but without content and show to the user that no internet connection
     if (_firebaseApi.isUser) {
+      bool access = await canAccess();
+      print(_firebaseApi.isUser);
       if (access == true) {
         Navigator.of(context).pushReplacementNamed(Navigation.pageRoute);
       } else {
@@ -44,10 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     } else {
       Navigator.of(context).pushReplacementNamed(OnBoardingScreen.pageRoute);
-    }
-    /*_firebaseApi.isUser
-        ? Navigator.of(context).pushReplacementNamed(Navigation.pageRoute)
-        : Navigator.of(context).pushReplacementNamed(LogIn.pageRoute);*/
+    }   
   }
 
   @override
