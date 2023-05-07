@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:studying_app/view/screens/chat_gpt/chat_gpt_page.dart';
 import 'package:studying_app/view/screens/home/chat_screen.dart';
 import 'package:studying_app/view/screens/home/home.dart';
 import 'package:studying_app/view/screens/home/notification_page.dart';
 import 'package:studying_app/view/screens/home/user_profile.dart';
 import 'package:studying_app/view/widgets/app_background_container.dart';
+import 'package:studying_app/view/widgets/app_buttons/app_elevated_button.dart';
 
 import '../../theme/app_colors.dart';
 import '../save_homework_and_exams/local_homework_or_exam_screen.dart';
@@ -65,6 +67,7 @@ class _NavigationState extends State<Navigation> {
       body: AppBackground(
         child: bottomNavigationBarWidgets[_currentIndex],
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       //extendBody: true,
       floatingActionButton: _currentIndex != 1 ? null : floatingActionButton(),
@@ -94,73 +97,59 @@ class _NavigationState extends State<Navigation> {
       elevation: 0,
       backgroundColor: AppColors.buttonsLightColor,
       onPressed: () {
-        floatingExpanded = true;
-        setState(() {});
-      },
-      child: const Text(
-        '< >',
-      ),
-    );
-
-    TextButton examsButton = TextButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(
-          HomeworkOrExamsPage.pageRoute,
-        );
-      },
-      child: const Icon(
-        Icons.add,
-        color: Colors.white,
-      ),
-    );
-
-    TextButton chatGptButton = TextButton(
-      onPressed: () {
-        print('gpt screen');
-      },
-      child: const Icon(
-        Icons.assistant,
-        color: Colors.white,
-      ),
-    );
-
-    var secondChild = Container(
-      width: 100,
-      decoration: BoxDecoration(
-        color: AppColors.buttonsLightColor,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(
-          10,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(child: examsButton),
-          Expanded(
-            child: TextButton(
-              onPressed: () {
-                floatingExpanded = false;
-                setState(() {});
-              },
-              child: const Icon(
-                Icons.remove,
-                color: Colors.white,
+        showModalBottomSheet(
+          isDismissible: true,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(
+                20,
               ),
             ),
           ),
-          Expanded(child: chatGptButton)
-        ],
+          context: context,
+          builder: (context) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                AppElevatedButton(
+                  label: "Your Homework",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(
+                      HomeworkOrExamsPage.pageRoute,
+                    );
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                AppElevatedButton(
+                  label: "Chat with Chat GPT",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ChatPage(),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: const Icon(
+        Icons.arrow_upward_outlined,
       ),
     );
-
-    return AnimatedCrossFade(
-      firstChild: firstChild,
-      secondChild: secondChild,
-      crossFadeState: floatingExpanded
-          ? CrossFadeState.showSecond
-          : CrossFadeState.showFirst,
-      duration: const Duration(milliseconds: 500),
-    );
+    return firstChild;
   }
 }

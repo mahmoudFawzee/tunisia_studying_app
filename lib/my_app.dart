@@ -5,6 +5,8 @@ import 'package:studying_app/view/screens/start/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:studying_app/view/theme/app_theme.dart';
 
+import 'view/screens/chat_gpt/chat_gpt_page.dart';
+
 class MyApp extends StatefulWidget {
   const MyApp._init();
   static const MyApp _instance = MyApp._init();
